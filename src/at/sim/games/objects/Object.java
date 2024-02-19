@@ -4,18 +4,34 @@ import org.newdawn.slick.Graphics;
 
 public class Object {
     private enum DIRECTION {LEFT, RIGHT, UP, DOWN};
+    public enum TYPE {RECTANGLE, ELLIPSE}
     private float x;
     private float y;
     private float speed;
+    private int width;
+    private int height;
 
-    public Object(float x, float y, float speed) {
+    private TYPE type;
+
+    public Object(float x, float y, int width, int height, float speed, TYPE type) {
         this.x = x;
         this.y = y;
+
+        this.width = width;
+        this.height = height;
+
+        this.type = type;
+
         this.speed = speed;
     }
 
     public void render(Graphics graphics){
-        graphics.drawRect(this.x, this.y, 10, 10);
+        if (this.type == TYPE.ELLIPSE) {
+            graphics.drawOval(this.x, this.y, this.width, this.height);
+        }
+        else if (this.type == TYPE.RECTANGLE){
+            graphics.drawRect(this.x, this.y, this.width, this.height);
+        }
     }
 
     public void update(int delta){
