@@ -2,7 +2,7 @@ package at.sim.games.objects;
 
 import org.newdawn.slick.Graphics;
 
-public class Object {
+public class Object implements Actor{
     private enum DIRECTION {LEFT, RIGHT, UP, DOWN};
     public enum TYPE {RECTANGLE, ELLIPSE}
     private float x;

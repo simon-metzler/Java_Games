@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ObjectsGame extends BasicGame {
 
-    private List<Object> objects;
+    private List<Actor> actors;
 
 
     public ObjectsGame(String title) {
@@ -17,7 +17,7 @@ public class ObjectsGame extends BasicGame {
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
-        this.objects = new ArrayList<Object>();
+        this.actors = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < 1000; i++) {
 
@@ -33,23 +33,23 @@ public class ObjectsGame extends BasicGame {
 
             }
 
-            objects.add(object);
+            actors.add(object);
         }
 
     }
 
     @Override
     public void update(GameContainer gameContainer, int delta) throws SlickException {
-        for (Object object : objects) {
-            object.update(delta);
+        for (Actor actor : actors) {
+            actor.update(delta);
         }
 
     }
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-        for (Object object : objects) {
-            object.render(graphics);
+        for (Actor actor : actors) {
+            actor.render(graphics);
         }
     }
 
