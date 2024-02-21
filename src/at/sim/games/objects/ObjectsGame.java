@@ -25,11 +25,11 @@ public class ObjectsGame extends BasicGame {
             Object object;
 
             if (random.nextBoolean()) {
-                object = new Object(random.nextInt(600), random.nextInt(600), random.nextInt(10), random.nextInt(10), random.nextInt(50), Object.TYPE.ELLIPSE);
+                object = new Object(random.nextInt(600), random.nextInt(600), random.nextInt(60), random.nextInt(60), random.nextInt(50), Object.TYPE.ELLIPSE, Object.DIRECTION.DOWN);
             }
 
             else {
-                object = new Object(random.nextInt(600), random.nextInt(600), random.nextInt(10), random.nextInt(10), random.nextInt(50), Object.TYPE.RECTANGLE);
+                object = new Object(random.nextInt(600), random.nextInt(600), random.nextInt(10), random.nextInt(10), random.nextInt(50), Object.TYPE.RECTANGLE, Object.DIRECTION.RIGHT);
 
             }
 
