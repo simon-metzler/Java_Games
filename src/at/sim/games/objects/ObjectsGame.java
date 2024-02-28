@@ -11,6 +11,7 @@ public class ObjectsGame extends BasicGame {
     private List<Actor> actors;
 
 
+
     public ObjectsGame(String title) {
         super(title);
     }
@@ -35,6 +36,10 @@ public class ObjectsGame extends BasicGame {
 
             actors.add(object);
         }
+
+        Rocket rocket = new Rocket();
+        actors.add(rocket);
+
 
     }
 

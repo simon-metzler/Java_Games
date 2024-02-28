@@ -67,8 +67,8 @@ public class Object implements Actor{
         }
 
         if (this.type == TYPE.ELLIPSE){
-            this.width += 0.05;
-            this.height += 0.05;
+            this.width += 0.005;
+            this.height += 0.005;
 
             if (this.width > 50){
                 this.width = 0;
