@@ -1,5 +1,6 @@
 package at.sim.games.objects;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 
 public class Object implements Actor{
@@ -37,7 +38,7 @@ public class Object implements Actor{
         }
     }
 
-    public void update(int delta){
+    public void update(GameContainer gameContainer, int delta){
         if (this.direction == DIRECTION.RIGHT){
             this.x += (float)delta/this.speed;
             if (this.x > 600) {

@@ -9,6 +9,7 @@ import java.util.List;
 public class ObjectsGame extends BasicGame {
 
     private List<Actor> actors;
+    private Rocket rocket;
 
 
 
@@ -20,7 +21,7 @@ public class ObjectsGame extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         this.actors = new ArrayList<>();
         Random random = new Random();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
 
 
             Object object;
@@ -37,8 +38,9 @@ public class ObjectsGame extends BasicGame {
             actors.add(object);
         }
 
-        Rocket rocket = new Rocket();
-        actors.add(rocket);
+        this.rocket = new Rocket();
+        actors.add(this.rocket);
+
 
 
     }
@@ -46,15 +48,22 @@ public class ObjectsGame extends BasicGame {
     @Override
     public void update(GameContainer gameContainer, int delta) throws SlickException {
         for (Actor actor : actors) {
-            actor.update(delta);
+            actor.update(gameContainer, delta);
         }
-
     }
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
         for (Actor actor : actors) {
             actor.render(graphics);
+        }
+    }
+
+    @Override
+    public void keyPressed(int key, char c) {
+        if (key == Input.KEY_SPACE){
+            Cannonball cb = new Cannonball(this.rocket.getX(), this.rocket.getY());
+            actors.add(cb);
         }
     }
 
