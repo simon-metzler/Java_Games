@@ -20,6 +20,10 @@ public class Game extends BasicGame {
         Cam cam = new Cam(300, 300, 3);
         this.actors.add(cam);
 
+        Car car = new Car(300, 300, 0.1f, 0.1f);
+
+        this.actors.add(car);
+
 
 
     }
@@ -40,8 +44,8 @@ public class Game extends BasicGame {
 
     public static void main(String[] args) {
         try {
-            AppGameContainer container = new AppGameContainer(new Game("Racer"));
-            container.setDisplayMode(600, 600, false);
+            AppGameContainer container = new AppGameContainer(new Game("Spollis Drifter"));
+            container.setDisplayMode(1000, 1000, false);
             container.start();
         } catch (SlickException e) {
             e.printStackTrace();
