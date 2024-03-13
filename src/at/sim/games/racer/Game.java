@@ -17,11 +17,9 @@ public class Game extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         this.actors = new ArrayList<>();
 
-        Cam cam = new Cam(300, 300, 3);
-        this.actors.add(cam);
-
-        Car car = new Car(300, 300, 0.1f, 0.1f);
-
+        Car car = new Car(300, 300, 0.3f, 0.1f);
+        Goal goal = new Goal(car);
+        this.actors.add(goal);
         this.actors.add(car);
 
 

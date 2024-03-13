@@ -1,6 +1,8 @@
 package at.sim.games.racer;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 public class Car implements Actor{
 
@@ -14,6 +16,7 @@ public class Car implements Actor{
     private float direction_change_speed;
     private Image car_image;
     private int steering;
+    public Rectangle rectangle;
 
     public Car(float x, float y, float speed, float direction_change_speed) throws SlickException {
         this.x = x;
@@ -24,9 +27,12 @@ public class Car implements Actor{
         this.speed = speed;
         this.direction_change_speed = direction_change_speed;
         this.steering = 0;
+        this.max_speed = 1;
 
         Image temp = new Image("testdata/car.png");
         this.car_image = temp.getScaledCopy(50, 50);
+
+        this.rectangle = new Rectangle(x, y, 50, 50);
 
     }
 
@@ -34,6 +40,8 @@ public class Car implements Actor{
     public void render(Graphics graphics) {
         this.car_image.setRotation(this.direction+90);
         this.car_image.draw(this.x, this.y);
+
+        //graphics.draw(this.rectangle);
 
     }
 
@@ -58,6 +66,7 @@ public class Car implements Actor{
         }
 
 
+
         if(gameContainer.getInput().isKeyDown(Input.KEY_A)){
             this.direction += this.direction_change_speed/delta*this.steering;
         }
@@ -65,6 +74,20 @@ public class Car implements Actor{
         if(gameContainer.getInput().isKeyDown(Input.KEY_D)){
             this.direction -= this.direction_change_speed/delta*this.steering;
         }
+
+        if (this.vel_x < -this.max_speed){
+            this.vel_x = -this.max_speed;
+        }
+        if (this.vel_x > this.max_speed) {
+            this.vel_x = this.max_speed;
+        }
+        if (this.vel_y < -this.max_speed){
+            this.vel_y = -this.max_speed;
+        }
+        if (this.vel_y > this.max_speed) {
+            this.vel_y = this.max_speed;
+        }
+
 
 
         this.x += this.vel_x/delta;
@@ -83,6 +106,9 @@ public class Car implements Actor{
         if (this.y > 990){
             this.y = 990;
         }
+
+        this.rectangle.setX(this.x);
+        this.rectangle.setY(this.y);
 
 
 
