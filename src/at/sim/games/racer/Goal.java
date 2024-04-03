@@ -6,7 +6,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import java.util.Random;
 
-public class Goal implements Actor{
+public class Goal implements Actor {
 
     private Random random;
     private Car car;
@@ -28,17 +28,15 @@ public class Goal implements Actor{
 
     @Override
     public void update(GameContainer gameContainer, int delta) {
-        if (rectangle.contains(car.rectangle.getX(), car.rectangle.getY()) &&
-                rectangle.contains(car.rectangle.getX() + car.rectangle.getWidth(), car.rectangle.getY() + car.rectangle.getHeight())) {
+        if (rectangle.contains(car.rectangle.getX(), car.rectangle.getY()) && rectangle.contains(car.rectangle.getX() + car.rectangle.getWidth(), car.rectangle.getY() + car.rectangle.getHeight())) {
             updatePosition();
         }
 
     }
 
 
-
-    private void updatePosition(){
-        this.rectangle.setX(this.random.nextInt(1000));
-        this.rectangle.setY(this.random.nextInt(1000));
+    private void updatePosition() {
+        this.rectangle.setX(this.random.nextInt((int) (1000 - this.rectangle.getWidth() * 2)) + this.rectangle.getWidth());
+        this.rectangle.setY(this.random.nextInt((int) (1000 - this.rectangle.getHeight() * 2)) + this.rectangle.getHeight());
     }
 }
