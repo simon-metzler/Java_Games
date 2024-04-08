@@ -32,7 +32,7 @@ public class Game extends BasicGame {
         House house = new House(random.nextInt(800), random.nextInt(800), random.nextInt(100) + 100, random.nextInt(100) + 100);
 
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
 
             house = new House(random.nextInt(800), random.nextInt(800), random.nextInt(100) + 100, random.nextInt(100) + 100);
             this.actors.add(house);
