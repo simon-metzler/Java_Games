@@ -1,5 +1,6 @@
 package at.sim.games.racer;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -23,6 +24,7 @@ public class Goal implements Actor {
     @Override
     public void render(Graphics graphics) {
         graphics.fill(this.rectangle);
+
 
     }
 
