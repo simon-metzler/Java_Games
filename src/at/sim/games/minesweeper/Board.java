@@ -1,8 +1,6 @@
 package at.sim.games.minesweeper;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
+import org.newdawn.slick.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +16,35 @@ public class Board implements Actor {
     private int tile_size;
     private int[][] neighbours_pos;
 
-    public Board(int height, int width) {
+    private List<Image> images;
+
+    private String[] image_names;
+    private boolean game_over;
+    private boolean genereated;
+
+    public Board(int height, int width, int tile_size) throws SlickException {
         this.height = height;
         this.width = width;
         this.board = new int[this.height][this.width];
         this.neighbours_pos = new int[][]{{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
         this.rng = new Random();
-        this.tile_size = 30;
+        this.tile_size = tile_size;
+
+        this.images = new ArrayList<>();
+
+        this.image_names = new String[]{"unknown", "mine", "known", "1", "2", "3", "4", "5", "6", "7", "8"};
+
+
+        Image temp;
+        for (String name : image_names) {
+            temp = new Image("src/at/sim/games/minesweeper/img/" + name + ".png");
+            this.images.add(temp.getScaledCopy(this.tile_size, this.tile_size));
+        }
+
+        this.game_over = false;
+
+        this.genereated = false;
+
 
     }
 
@@ -56,11 +76,23 @@ public class Board implements Actor {
     }
 
     public void updateBoard() {
+        boolean game_finished = true;
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
+
                 if (this.board[x][y] == -2) {
+                    game_finished = false;
+                }
+
+                if (this.board[x][y] == -2 || this.board[x][y] == 0) {
+
+
                     boolean revealed = false;
                     int mines = 0;
+
+                    if (this.board[x][y] == 0) {
+                        revealed = true;
+                    }
 
                     for (int[] relative_neighbour_position : this.neighbours_pos) {
                         int abs_neighbour_pos_x = x + relative_neighbour_position[0];
@@ -88,24 +120,25 @@ public class Board implements Actor {
             }
 
         }
+
+        if (game_finished && this.genereated) {
+            System.out.println("DU HAST GEWONNEN JUHU");
+        }
+
     }
 
 
     @Override
     public void render(Graphics graphics) {
+        int type;
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                if (this.board[x][y] == -2) {
-                    graphics.setColor(Color.gray);
-                } else if (this.board[x][y] == -1) {
-                    graphics.setColor(Color.red);
-                } else if (this.board[x][y] == 0) {
-                    graphics.setColor(Color.lightGray);
-                } else {
-                    graphics.setColor(Color.blue);
+                type = this.board[x][y];
+                if (type == -1 && !this.game_over) {
+                    type = -2;
                 }
+                this.images.get(type + 2).draw(x * this.tile_size, y * this.tile_size);
 
-                graphics.fillRect(x * this.tile_size, y * tile_size, this.tile_size, this.tile_size);
 
             }
 
@@ -115,6 +148,25 @@ public class Board implements Actor {
 
     @Override
     public void update(GameContainer gameContainer, int delta) {
+        Input input = gameContainer.getInput();
+        if (input.isMousePressed(0)) {
+            int x = input.getMouseX() / this.tile_size;
+            int y = input.getMouseY() / this.tile_size;
+
+            if (this.genereated == false) {
+                generateBoard(x, y, 20);
+                this.genereated = true;
+
+            } else if (this.board[x][y] == -1) {
+                this.game_over = true;
+
+            } else if (this.board[x][y] == -2) {
+                this.board[x][y] = 0;
+            }
+
+        }
+
+        updateBoard();
 
     }
 }

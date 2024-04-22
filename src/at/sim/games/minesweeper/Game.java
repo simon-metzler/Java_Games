@@ -6,23 +6,23 @@ public class Game extends BasicGame {
 
     private Board board;
 
-    public Game(String title) {
+
+    public Game(String title) throws SlickException {
         super(title);
-        this.board = new Board(10, 10);
     }
 
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
+        this.board = new Board(10, 10, 1000 / 10);
         this.board.resetBoard();
-        this.board.generateBoard(0, 0, 10);
 
 
     }
 
     @Override
     public void update(GameContainer gameContainer, int i) throws SlickException {
-        this.board.updateBoard();
+        this.board.update(gameContainer, i);
     }
 
     @Override
