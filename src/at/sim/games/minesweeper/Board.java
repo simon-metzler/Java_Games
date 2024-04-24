@@ -119,7 +119,7 @@ public class Board implements Actor {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
 
-                if (!this.board[x][y].isKnown() && !this.board[x][y].isFlagged()) {
+                if (!this.board[x][y].isKnown() && !this.board[x][y].isMine()) {
                     game_finished = false;
                 }
 
