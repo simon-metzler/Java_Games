@@ -32,7 +32,7 @@ public class Board implements Actor {
 
         this.images = new ArrayList<>();
 
-        this.image_names = new String[]{"unknown", "mine", "known", "1", "2", "3", "4", "5", "6", "7", "8"};
+        this.image_names = new String[]{"unknown", "mine", "known", "1", "2", "3", "4", "5", "6", "7", "8", "flag"};
 
 
         Image temp;
@@ -76,7 +76,10 @@ public class Board implements Actor {
     }
 
     public void updateBoard() {
+
+
         boolean game_finished = true;
+
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
 
@@ -87,19 +90,16 @@ public class Board implements Actor {
                 if (this.board[x][y] == -2 || this.board[x][y] == 0) {
 
 
-                    boolean revealed = false;
+                    boolean revealed = this.board[x][y] == 0;
                     int mines = 0;
 
-                    if (this.board[x][y] == 0) {
-                        revealed = true;
-                    }
 
                     for (int[] relative_neighbour_position : this.neighbours_pos) {
                         int abs_neighbour_pos_x = x + relative_neighbour_position[0];
                         int abs_neighbour_pos_y = y + relative_neighbour_position[1];
 
                         if (abs_neighbour_pos_x >= 0 && abs_neighbour_pos_x < this.width && abs_neighbour_pos_y >= 0 && abs_neighbour_pos_y < this.height) {
-                            if (this.board[abs_neighbour_pos_x][abs_neighbour_pos_y] == -1) {
+                            if (this.board[abs_neighbour_pos_x][abs_neighbour_pos_y] == -1 || this.board[abs_neighbour_pos_x][abs_neighbour_pos_y] == 10) {
                                 mines += 1;
                             }
                             if (this.board[abs_neighbour_pos_x][abs_neighbour_pos_y] == 0) {
@@ -137,6 +137,11 @@ public class Board implements Actor {
                 if (type == -1 && !this.game_over) {
                     type = -2;
                 }
+
+                if (type == 10) {
+                    type = 9;
+                }
+
                 this.images.get(type + 2).draw(x * this.tile_size, y * this.tile_size);
 
 
@@ -163,6 +168,26 @@ public class Board implements Actor {
             } else if (this.board[x][y] == -2) {
                 this.board[x][y] = 0;
             }
+
+        }
+
+
+        if (input.isMousePressed(1)) {
+            int x = input.getMouseX() / this.tile_size;
+            int y = input.getMouseY() / this.tile_size;
+
+            int type = this.board[x][y];
+
+            if (type == -2) {
+                this.board[x][y] = 9;
+            } else if (type == -1) {
+                this.board[x][y] = 10;
+            } else if (type == 9) {
+                this.board[x][y] = -2;
+            } else if (type == 10) {
+                this.board[x][y] = -1;
+            }
+
 
         }
 
