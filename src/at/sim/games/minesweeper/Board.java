@@ -11,7 +11,7 @@ public class Board implements Actor {
     private int height;
     private int width;
 
-    private int[][] board;
+    private Tile[][] board;
     private Random rng;
     private int tile_size;
     private int[][] neighbours_pos;
@@ -25,7 +25,7 @@ public class Board implements Actor {
     public Board(int height, int width, int tile_size) throws SlickException {
         this.height = height;
         this.width = width;
-        this.board = new int[this.height][this.width];
+        this.board = new Tile[this.height][this.width];
         this.neighbours_pos = new int[][]{{-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}};
         this.rng = new Random();
         this.tile_size = tile_size;
@@ -51,7 +51,7 @@ public class Board implements Actor {
     public void resetBoard() {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                this.board[x][y] = -2;
+                this.board[x][y] = new Tile(false);
 
             }
 
@@ -64,16 +64,42 @@ public class Board implements Actor {
         while (minesCount < maxMines) {
             randomX = this.rng.nextInt(this.width);
             randomY = this.rng.nextInt(this.height);
-            if (this.board[randomX][randomY] == -2 && randomX != startX && randomY != startY) {
-                this.board[randomX][randomY] = -1;
+            if (!this.board[randomX][randomY].isMine() && randomX != startX && randomY != startY) {
+                this.board[randomX][randomY].setMine(true);
                 minesCount++;
             }
 
 
         }
 
-        this.board[startX][startY] = 0;
+        this.board[startX][startY].setKnown(true);
+        updateMines();
     }
+
+
+    public void updateMines() {
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+
+                int mines = 0;
+
+                for (int[] relative_neighbour_position : this.neighbours_pos) {
+                    int abs_neighbour_pos_x = x + relative_neighbour_position[0];
+                    int abs_neighbour_pos_y = y + relative_neighbour_position[1];
+
+                    if (abs_neighbour_pos_x >= 0 && abs_neighbour_pos_x < this.width && abs_neighbour_pos_y >= 0 && abs_neighbour_pos_y < this.height) {
+                        if (this.board[abs_neighbour_pos_x][abs_neighbour_pos_y].isMine()) {
+                            mines += 1;
+                        }
+                    }
+                }
+
+                this.board[x][y].setMines(mines);
+
+            }
+        }
+    }
+
 
     public void updateBoard() {
 
@@ -83,66 +109,43 @@ public class Board implements Actor {
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
 
-                if (this.board[x][y] == -2) {
+                if (!this.board[x][y].isKnown()) {
                     game_finished = false;
                 }
 
-                if (this.board[x][y] == -2 || this.board[x][y] == 0) {
+                for (int[] relative_neighbour_position : this.neighbours_pos) {
+                    int abs_neighbour_pos_x = x + relative_neighbour_position[0];
+                    int abs_neighbour_pos_y = y + relative_neighbour_position[1];
 
-
-                    boolean revealed = this.board[x][y] == 0;
-                    int mines = 0;
-
-
-                    for (int[] relative_neighbour_position : this.neighbours_pos) {
-                        int abs_neighbour_pos_x = x + relative_neighbour_position[0];
-                        int abs_neighbour_pos_y = y + relative_neighbour_position[1];
-
-                        if (abs_neighbour_pos_x >= 0 && abs_neighbour_pos_x < this.width && abs_neighbour_pos_y >= 0 && abs_neighbour_pos_y < this.height) {
-                            if (this.board[abs_neighbour_pos_x][abs_neighbour_pos_y] == -1 || this.board[abs_neighbour_pos_x][abs_neighbour_pos_y] == 10) {
-                                mines += 1;
-                            }
-                            if (this.board[abs_neighbour_pos_x][abs_neighbour_pos_y] == 0) {
-                                revealed = true;
-                            }
-
+                    if (abs_neighbour_pos_x >= 0 && abs_neighbour_pos_x < this.width && abs_neighbour_pos_y >= 0 && abs_neighbour_pos_y < this.height) {
+                        if (this.board[abs_neighbour_pos_x][abs_neighbour_pos_y].isKnown() || this.board[abs_neighbour_pos_x][abs_neighbour_pos_y].getMines() == 0) {
+                            this.board[x][y].setKnown(true);
                         }
 
                     }
 
-                    if (revealed) {
-                        this.board[x][y] = mines;
-                    }
-
-
                 }
-
             }
 
         }
-
-        if (game_finished && this.genereated) {
-            System.out.println("DU HAST GEWONNEN JUHU");
-        }
-
     }
 
 
     @Override
     public void render(Graphics graphics) {
-        int type;
+        Tile tile;
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
-                type = this.board[x][y];
-                if (type == -1 && !this.game_over) {
-                    type = -2;
+                tile = this.board[x][y];
+                if (!tile.isKnown()) {
+                    if (tile.isFlagged()) {
+                        this.images.get(9).draw(x * this.tile_size, y * this.tile_size);
+                    } else {
+                        this.images.get(0).draw(x * this.tile_size, y * this.tile_size);
+                    }
+                } else if (tile.isKnown()) {
+                    this.images.get(tile.getMines() + 2).draw(x * this.tile_size, y * this.tile_size);
                 }
-
-                if (type == 10) {
-                    type = 9;
-                }
-
-                this.images.get(type + 2).draw(x * this.tile_size, y * this.tile_size);
 
 
             }
@@ -162,11 +165,11 @@ public class Board implements Actor {
                 generateBoard(x, y, 20);
                 this.genereated = true;
 
-            } else if (this.board[x][y] == -1) {
+            } else if (this.board[x][y].isMine()) {
                 this.game_over = true;
 
-            } else if (this.board[x][y] == -2) {
-                this.board[x][y] = 0;
+            } else if (this.board[x][y].isKnown()) {
+                this.board[x][y].setKnown(true);
             }
 
         }
@@ -176,16 +179,10 @@ public class Board implements Actor {
             int x = input.getMouseX() / this.tile_size;
             int y = input.getMouseY() / this.tile_size;
 
-            int type = this.board[x][y];
+            Tile tile = this.board[x][y];
 
-            if (type == -2) {
-                this.board[x][y] = 9;
-            } else if (type == -1) {
-                this.board[x][y] = 10;
-            } else if (type == 9) {
-                this.board[x][y] = -2;
-            } else if (type == 10) {
-                this.board[x][y] = -1;
+            if (!tile.isKnown()) {
+                tile.setFlagged(!tile.isFlagged());
             }
 
 
