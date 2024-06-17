@@ -190,7 +190,7 @@ public class Board implements Actor {
                 int y = input.getMouseY() / this.tile_size;
 
                 if (this.generated == false) {
-                    generateBoard(x, y, 15);
+                    generateBoard(x, y, 50);
                     this.generated = true;
 
                 } else if (this.board[x][y].isMine()) {

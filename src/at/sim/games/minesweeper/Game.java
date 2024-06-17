@@ -14,7 +14,7 @@ public class Game extends BasicGame {
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
-        this.board = new Board(10, 10, 1000 / 10);
+        this.board = new Board(50, 50, 900 / 50);
         this.board.resetBoard();
 
 
@@ -33,7 +33,7 @@ public class Game extends BasicGame {
     public static void main(String[] args) {
         try {
             AppGameContainer container = new AppGameContainer(new Game("Minesweeper"));
-            container.setDisplayMode(1000, 1000, false);
+            container.setDisplayMode(900, 900, false);
             container.start();
         } catch (SlickException e) {
             e.printStackTrace();
