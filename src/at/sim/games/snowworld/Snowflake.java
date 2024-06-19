@@ -8,6 +8,8 @@ import java.util.Random;
 public class Snowflake implements Actor {
     private float x;
     private float y;
+
+
     private int diameter;
     private int speed;
 
@@ -41,6 +43,16 @@ public class Snowflake implements Actor {
 
     }
 
+    public MoveDown getMd() {
+        return md;
+    }
+
+    @Override
+    public void reset() {
+        this.md.setY(0);
+        this.md.setX(this.random.nextInt(600));
+    }
+
     @Override
     public void render(Graphics graphics) {
         graphics.fillOval(this.md.getX(), this.md.getY(), this.diameter, this.diameter);
@@ -51,8 +63,7 @@ public class Snowflake implements Actor {
     public void update(int delta) {
         this.md.update(delta);
         if (this.md.getY() > 600) {
-            this.md.setY(0);
-            this.md.setX(this.random.nextInt(600));
+            reset();
         }
     }
 }

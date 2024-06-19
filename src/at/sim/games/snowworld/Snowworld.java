@@ -10,6 +10,7 @@ public class Snowworld extends BasicGame {
 
 
     private List<Actor> actors;
+    private Umbrella umbrella;
 
 
     public Snowworld(String title) {
@@ -31,13 +32,16 @@ public class Snowworld extends BasicGame {
             actors.add(snowflake2);
             actors.add(snowflake3);
         }
+        this.umbrella = new Umbrella(200, 200, 100, 10);
     }
+
 
     @Override
     public void update(GameContainer gameContainer, int delta) throws SlickException {
         for (Actor actor : actors) {
             actor.update(delta);
         }
+        this.umbrella.update(delta, this.actors);
     }
 
     @Override
@@ -45,6 +49,7 @@ public class Snowworld extends BasicGame {
         for (Actor actor : actors) {
             actor.render(graphics);
         }
+        this.umbrella.render(graphics);
     }
 
     public static void main(String[] args) {
